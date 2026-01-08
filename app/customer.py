@@ -83,4 +83,3 @@ class Customer:
         self.money = round(self.money, 2)
         formatted_money = format_price(self.money)
         print(f"{self.name} now has {formatted_money} dollars\n")
-
