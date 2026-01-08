@@ -71,7 +71,6 @@ class Customer:
         for product, qty in self.product_cart.items():
             price = shop.products.get(product, 0)
             total_price = price * qty
-            # Форматируем цену товара
             formatted_price = format_price(total_price)
             print(f"{qty} {product}s for {formatted_price} dollars")
 
@@ -85,4 +84,4 @@ class Customer:
         self.money -= total_cost
         self.money = round(self.money, 2)
         formatted_money = format_price(self.money)
-        print(f"{self.name} now has {formatted_money} dollars\n")
+        print(f"{self.name} now has {formatted_money} dollars")
