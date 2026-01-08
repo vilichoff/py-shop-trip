@@ -30,6 +30,9 @@ def shop_trip() -> None:
         customers.append(customer)
 
     for i, customer in enumerate(customers):
+        if i > 0:
+            print()
+
         money_str = format_money(customer.money)
         print(f"{customer.name} has {money_str} dollars")
 
@@ -49,14 +52,10 @@ def shop_trip() -> None:
                 affordable.append((cost, shop))
 
         if not affordable:
-            message = (
+            print(
                 f"{customer.name} doesn't have enough money to make a "
                 "purchase in any shop"
             )
-            if i == len(customers) - 1:
-                print(message)
-            else:
-                print(message + "\n")
             continue
 
         affordable.sort(key=lambda x: x[0])
