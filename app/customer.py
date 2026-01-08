@@ -7,7 +7,14 @@ from app.shop import Shop
 
 
 def format_price(price: float) -> str:
-    return f"{price:.2f}"
+    if price.is_integer():
+        return str(int(price))
+    formatted = f"{price:.2f}"
+    if formatted.endswith(".00"):
+        return formatted[:-3]
+    elif formatted.endswith("0"):
+        return formatted[:-1]
+    return formatted
 
 
 @dataclass
@@ -61,8 +68,12 @@ class Customer:
         for product, qty in self.product_cart.items():
             price = shop.products.get(product, 0)
             total_price = price * qty
-            print(f"{qty} {product}s for {format_price(total_price)} dollars")
-        print(f"Total cost is {format_price(products_cost)} dollars")
+            # Форматируем каждую цену отдельно
+            formatted_price = format_price(total_price)
+            print(f"{qty} {product}s for {formatted_price} dollars")
+
+        formatted_total = format_price(products_cost)
+        print(f"Total cost is {formatted_total} dollars")
         print("See you again!\n")
 
         self.location = self.home_location.copy()
@@ -70,4 +81,6 @@ class Customer:
 
         self.money -= total_cost
         self.money = round(self.money, 2)
-        print(f"{self.name} now has {format_price(self.money)} dollars\n")
+        formatted_money = format_price(self.money)
+        print(f"{self.name} now has {formatted_money} dollars\n")
+

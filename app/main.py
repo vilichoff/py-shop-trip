@@ -34,16 +34,17 @@ def shop_trip() -> None:
         customers.append(customer)
 
     for customer in customers:
-        print(f"{customer.name} has {format_price(customer.money)} dollars")
+        money_str = format_price(customer.money)
+        print(f"{customer.name} has {money_str} dollars")
 
-        # Рассчитать стоимость поездки в каждый магазин
         costs = []
         for shop in shops:
             cost = customer.trip_cost(shop, fuel_price)
             costs.append((cost, shop))
+            cost_str = f"{cost:.2f}"
             print(
                 f"{customer.name}'s trip to the {shop.name} costs "
-                f"{format_price(cost)}"
+                f"{cost_str}"
             )
 
         affordable = []
@@ -58,7 +59,6 @@ def shop_trip() -> None:
             )
             continue
 
-        # Выбрать самый дешевый вариант
         affordable.sort(key=lambda x: x[0])
         best_cost, best_shop = affordable[0]
 
