@@ -1,31 +1,16 @@
 from dataclasses import dataclass
-import datetime
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from app.customer import Customer
-
+from typing import List, Dict
 
 @dataclass
 class Shop:
     name: str
-    products: dict
-    location: list[int]
+    location: List[int]
+    products: Dict[str, float]
 
-    def print_receipt(self, customer: "Customer") -> None:
-        now = datetime.datetime.now()
-        print(f"Date: {now.strftime('%d/%m/%Y %H:%M:%S')}")
-        print(f"Thanks, {customer.name}, for your purchase!")
-        print("You have bought:")
-
-        total_price = 0.0
-        for product, quantity in customer.product_cart.items():
-            price = self.products.get(product, 0)
-            item_total = price * quantity
-            total_price += item_total
-            print(f"{quantity} {product}s for {item_total} dollars")
-
-        print(f"Total cost is {total_price} dollars")
-        print("See you again!")
-
-        return total_price
+    def cost_of_products(self, product_cart: Dict[str, int]) -> float:
+        total = 0.0
+        for product, qty in product_cart.items():
+            if product not in self.products:
+                return float('inf')
+            total += self.products[product] * qty
+        return total

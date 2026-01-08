@@ -1,65 +1,37 @@
 import json
-from pathlib import Path
-
 from app.car import Car
 from app.customer import Customer
 from app.shop import Shop
 
+def shop_trip():
+    with open("config.json") as f:
+        config = json.load(f)
 
-def shop_trip() -> None:
-    data_path = Path(__file__).resolve().parent.parent / "config.json"
+    FUEL_PRICE = config["FUEL_PRICE"]
 
-    with open(data_path, encoding="utf-8") as file:
-        data = json.load(file)
-
-    fuel_price = data["FUEL_PRICE"]
-
+    shops = [Shop(s["name"], s["location"], s["products"]) for s in config["shops"]]
     customers = []
-    for customer_data in data["customers"]:
-        car = Car(**customer_data["car"])
-        customer = Customer(
-            name=customer_data["name"],
-            product_cart=customer_data["product_cart"],
-            location=customer_data["location"],
-            money=customer_data["money"],
-            car=car,
-        )
-        customers.append(customer)
 
-    shops = [Shop(**shop_data) for shop_data in data["shops"]]
+    for c in config["customers"]:
+        car = Car(c["car"]["brand"], c["car"]["fuel_consumption"])
+        cust = Customer(c["name"], c["product_cart"], c["location"], c["money"], car)
+        customers.append(cust)
 
-    for customer in customers:
-        print(f"{customer.name} has {customer.money} dollars")
+    for cust in customers:
+        print(f"{cust.name} has {cust.money} dollars")
 
-        trips = []
-        for shop in shops:
-            cost = round(
-                customer.get_total_cost(shop, fuel_price),
-                2,
-            )
-            print(f"{customer.name}'s trip to the {shop.name} costs {cost}")
-            trips.append((shop, cost))
+        costs = [(cust.trip_cost(shop, FUEL_PRICE), shop) for shop in shops]
+        for cost, shop in costs:
+            print(f"{cust.name}'s trip to the {shop.name} costs {cost:.2f}")
 
-        shop, best_cost = min(trips, key=lambda item: item[1])
+        affordable = [ (cost, shop) for cost, shop in costs if cost <= cust.money ]
 
-        if best_cost > customer.money:
-            print(
-                f"{customer.name} doesn't have enough money "
-                "to make a purchase in any shop"
-            )
-            print()
+        if not affordable:
+            print(f"{cust.name} doesn't have enough money to make a purchase in any shop")
             continue
 
-        print(f"{customer.name} rides to {shop.name}\n")
+        affordable.sort(key=lambda x: x[0])
+        best_cost, best_shop = affordable[0]
 
-        start_location = customer.location[:]
-        customer.location = shop.location
-
-        shop.print_receipt(customer)
-        print()
-
-        customer.money = round(customer.money - best_cost, 2)
-        customer.location = start_location
-
-        print(f"{customer.name} rides home")
-        print(f"{customer.name} now has {customer.money} dollars\n")
+        print(f"{cust.name} rides to {best_shop.name}")
+        cust.buy_from(best_shop, FUEL_PRICE)
