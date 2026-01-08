@@ -7,14 +7,17 @@ from app.shop import Shop
 
 
 def format_price(price: float) -> str:
-    if price.is_integer():
+    if float(price).is_integer():
         return str(int(price))
-    formatted = f"{price:.2f}"
-    if formatted.endswith(".00"):
-        return formatted[:-3]
-    elif formatted.endswith("0"):
-        return formatted[:-1]
-    return formatted
+    if round(price, 1) == price:
+        return f"{price:.1f}"
+    return f"{price:.2f}"
+
+
+def format_money(amount: float) -> str:
+    if float(amount).is_integer():
+        return str(int(amount))
+    return str(amount)
 
 
 @dataclass
@@ -68,7 +71,7 @@ class Customer:
         for product, qty in self.product_cart.items():
             price = shop.products.get(product, 0)
             total_price = price * qty
-            # Форматируем каждую цену отдельно
+            # Форматируем цену товара
             formatted_price = format_price(total_price)
             print(f"{qty} {product}s for {formatted_price} dollars")
 

@@ -1,11 +1,7 @@
 import json
 from app.car import Car
-from app.customer import Customer
+from app.customer import Customer, format_money
 from app.shop import Shop
-
-
-def format_price(price: float) -> str:
-    return f"{price:.2f}"
 
 
 def shop_trip() -> None:
@@ -34,7 +30,7 @@ def shop_trip() -> None:
         customers.append(customer)
 
     for customer in customers:
-        money_str = format_price(customer.money)
+        money_str = format_money(customer.money)
         print(f"{customer.name} has {money_str} dollars")
 
         costs = []
