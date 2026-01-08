@@ -1,9 +1,15 @@
+import datetime
 from dataclasses import dataclass, field
-from datetime import datetime
 from math import sqrt
 from typing import List, Dict
 from app.car import Car
 from app.shop import Shop
+
+
+def format_price(p: float) -> str:
+    if p.is_integer():
+        return str(int(p))
+    return f"{p:.2f}"
 
 
 @dataclass
@@ -19,9 +25,9 @@ class Customer:
         self.home_location = self.location.copy()
 
     def distance_to(self, location: List[int]) -> float:
-        dx = self.location[0] - location[0]
-        dy = self.location[1] - location[1]
-        return sqrt(dx * dx + dy * dy)
+        return sqrt(
+            (self.location[0] - location[0]) ** 2 + (self.location[1] - location[1]) ** 2
+        )
 
     def fuel_cost(self, distance_km: float, fuel_price: float) -> float:
         return (self.car.fuel_consumption * distance_km / 100) * fuel_price
@@ -44,18 +50,16 @@ class Customer:
         self.location = shop.location.copy()
         products_cost = shop.cost_of_products(self.product_cart)
         total_cost = round(fuel_there + products_cost + fuel_back, 2)
-        now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+        now = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
         print(f"\nDate: {now}")
         print(f"Thanks, {self.name}, for your purchase!")
-        print("You have bought: ")
+        print("You have bought:")
         for product, qty in self.product_cart.items():
             price = shop.products.get(product, 0)
-            print(
-                f"{qty} {product}s for "
-                f"{round(price * qty, 2)} dollars"
-            )
-        print(f"Total cost is {products_cost} dollars")
+            total_price = price * qty
+            print(f"{qty} {product}s for {format_price(total_price)} dollars")
+        print(f"Total cost is {format_price(products_cost)} dollars")
         print("See you again!\n")
 
         self.location = self.home_location.copy()
@@ -63,4 +67,4 @@ class Customer:
 
         self.money -= total_cost
         self.money = round(self.money, 2)
-        print(f"{self.name} now has {self.money} dollars")
+        print(f"{self.name} now has {format_price(self.money)} dollars")
