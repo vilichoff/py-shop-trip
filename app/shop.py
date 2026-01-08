@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+import datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -13,7 +13,7 @@ class Shop:
     location: list[int]
 
     def print_receipt(self, customer: "Customer") -> float:
-        now = datetime.now()
+        now = datetime.datetime.now()
         print(f"Date: {now.strftime('%d/%m/%Y %H:%M:%S')}")
         print(f"Thanks, {customer.name}, for your purchase!")
         print("You have bought:")
