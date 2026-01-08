@@ -6,10 +6,10 @@ from app.car import Car
 from app.shop import Shop
 
 
-def format_price(p: float) -> str:
-    if p.is_integer():
-        return str(int(p))
-    return f"{p:.2f}"
+def format_price(price: float) -> str:
+    if price.is_integer():
+        return str(int(price))
+    return f"{price:.2f}"
 
 
 @dataclass
@@ -26,7 +26,8 @@ class Customer:
 
     def distance_to(self, location: List[int]) -> float:
         return sqrt(
-            (self.location[0] - location[0]) ** 2 + (self.location[1] - location[1]) ** 2
+            (self.location[0] - location[0]) ** 2
+            + (self.location[1] - location[1]) ** 2
         )
 
     def fuel_cost(self, distance_km: float, fuel_price: float) -> float:
