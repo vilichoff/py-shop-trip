@@ -12,6 +12,9 @@ class Shop:
         total = 0.0
         for product, qty in product_cart.items():
             if product not in self.products:
-                return float("inf")
+                return None
             total += self.products[product] * qty
-        return total
+        return total  # Не округляем здесь, округлим в customer
+
+    def has_all_products(self, product_cart: Dict[str, int]) -> bool:
+        return all(product in self.products for product in product_cart)

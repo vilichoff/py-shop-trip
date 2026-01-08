@@ -7,8 +7,6 @@ from app.shop import Shop
 
 
 def format_price(price: float) -> str:
-    if price.is_integer():
-        return str(int(price))
     return f"{price:.2f}"
 
 
@@ -34,11 +32,14 @@ class Customer:
         return (self.car.fuel_consumption * distance_km / 100) * fuel_price
 
     def trip_cost(self, shop: Shop, fuel_price: float) -> float:
+        if not shop.has_all_products(self.product_cart):
+            return float('inf')
+
         dist = self.distance_to(shop.location)
         fuel_total = self.fuel_cost(dist, fuel_price) * 2
         products_cost = shop.cost_of_products(self.product_cart)
-        if products_cost == float("inf"):
-            return float("inf")
+        if products_cost is None:
+            return float('inf')
         return round(fuel_total + products_cost, 2)
 
     def can_afford(self, shop: Shop, fuel_price: float) -> bool:
@@ -51,9 +52,10 @@ class Customer:
         self.location = shop.location.copy()
         products_cost = shop.cost_of_products(self.product_cart)
         total_cost = round(fuel_there + products_cost + fuel_back, 2)
-        now = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
-        print(f"Date: {now}")
+        now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+        print(f"\nDate: {now}")
         print(f"Thanks, {self.name}, for your purchase!")
         print("You have bought:")
         for product, qty in self.product_cart.items():
@@ -61,11 +63,11 @@ class Customer:
             total_price = price * qty
             print(f"{qty} {product}s for {format_price(total_price)} dollars")
         print(f"Total cost is {format_price(products_cost)} dollars")
-        print("See you again!")
+        print("See you again!\n")
 
         self.location = self.home_location.copy()
         print(f"{self.name} rides home")
 
         self.money -= total_cost
         self.money = round(self.money, 2)
-        print(f"{self.name} now has {format_price(self.money)} dollars")
+        print(f"{self.name} now has {format_price(self.money)} dollars\n")

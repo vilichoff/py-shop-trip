@@ -4,6 +4,10 @@ from app.customer import Customer
 from app.shop import Shop
 
 
+def format_price(price: float) -> str:
+    return f"{price:.2f}"
+
+
 def shop_trip() -> None:
     with open("app/config.json") as file:
         config = json.load(file)
@@ -30,28 +34,26 @@ def shop_trip() -> None:
         customers.append(customer)
 
     for customer in customers:
-        print(f"{customer.name} has {customer.money} dollars")
+        print(f"{customer.name} has {format_price(customer.money)} dollars")
 
-        costs = [
-            (customer.trip_cost(shop, fuel_price), shop)
-            for shop in shops
-        ]
-        for cost, shop in costs:
+        costs = []
+        for shop in shops:
+            cost = customer.trip_cost(shop, fuel_price)
+            costs.append((cost, shop))
             print(
                 f"{customer.name}'s trip to the {shop.name} costs "
-                f"{cost:.2f}"
+                f"{format_price(cost)}"
             )
 
-        affordable = [
-            (cost, shop)
-            for cost, shop in costs
-            if cost <= customer.money
-        ]
+        affordable = []
+        for cost, shop in costs:
+            if cost <= customer.money and cost != float('inf'):
+                affordable.append((cost, shop))
 
         if not affordable:
             print(
                 f"{customer.name} doesn't have enough money to make a "
-                "purchase in any shop"
+                "purchase in any shop\n"
             )
             continue
 
