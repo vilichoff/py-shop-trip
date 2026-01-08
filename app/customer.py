@@ -51,9 +51,9 @@ class Customer:
         self.location = shop.location.copy()
         products_cost = shop.cost_of_products(self.product_cart)
         total_cost = round(fuel_there + products_cost + fuel_back, 2)
-        now = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+        now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")  # поменял формат даты
 
-        print(f"\nDate: {now}")
+        print(f"Date: {now}")
         print(f"Thanks, {self.name}, for your purchase!")
         print("You have bought:")
         for product, qty in self.product_cart.items():
@@ -61,7 +61,7 @@ class Customer:
             total_price = price * qty
             print(f"{qty} {product}s for {format_price(total_price)} dollars")
         print(f"Total cost is {format_price(products_cost)} dollars")
-        print("See you again!\n")
+        print("See you again!")
 
         self.location = self.home_location.copy()
         print(f"{self.name} rides home")
