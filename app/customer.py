@@ -59,10 +59,7 @@ class Customer:
         for product, qty in self.product_cart.items():
             price = shop.products.get(product, 0)
             total_price = price * qty
-            print(
-                f"{qty} {product}s for "
-                f"{format_price(total_price)} dollars"
-            )
+            print(f"{qty} {product}s for {format_price(total_price)} dollars")
         print(f"Total cost is {format_price(products_cost)} dollars")
         print("See you again!")
 
