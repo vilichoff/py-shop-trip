@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
+
 @dataclass
 class Shop:
     name: str
@@ -11,6 +12,6 @@ class Shop:
         total = 0.0
         for product, qty in product_cart.items():
             if product not in self.products:
-                return float('inf')
+                return float("inf")
             total += self.products[product] * qty
         return total

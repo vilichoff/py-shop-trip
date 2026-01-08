@@ -1,37 +1,46 @@
 import json
+from typing import NoReturn
 from app.car import Car
 from app.customer import Customer
 from app.shop import Shop
 
-def shop_trip():
-    with open("config.json") as f:
-        config = json.load(f)
 
-    FUEL_PRICE = config["FUEL_PRICE"]
+def shop_trip() -> NoReturn:
+    with open("config.json") as file:
+        config = json.load(file)
 
-    shops = [Shop(s["name"], s["location"], s["products"]) for s in config["shops"]]
+    fuel_price = config["FUEL_PRICE"]
+
+    shops = [
+        Shop(shop["name"], shop["location"], shop["products"]) for shop in config["shops"]
+    ]
     customers = []
+    for customer_data in config["customers"]:
+        car = Car(customer_data["car"]["brand"], customer_data["car"]["fuel_consumption"])
+        customer = Customer(
+            customer_data["name"],
+            customer_data["product_cart"],
+            customer_data["location"],
+            customer_data["money"],
+            car,
+        )
+        customers.append(customer)
 
-    for c in config["customers"]:
-        car = Car(c["car"]["brand"], c["car"]["fuel_consumption"])
-        cust = Customer(c["name"], c["product_cart"], c["location"], c["money"], car)
-        customers.append(cust)
+    for customer in customers:
+        print(f"{customer.name} has {customer.money} dollars")
 
-    for cust in customers:
-        print(f"{cust.name} has {cust.money} dollars")
-
-        costs = [(cust.trip_cost(shop, FUEL_PRICE), shop) for shop in shops]
+        costs = [(customer.trip_cost(shop, fuel_price), shop) for shop in shops]
         for cost, shop in costs:
-            print(f"{cust.name}'s trip to the {shop.name} costs {cost:.2f}")
+            print(f"{customer.name}'s trip to the {shop.name} costs {cost:.2f}")
 
-        affordable = [ (cost, shop) for cost, shop in costs if cost <= cust.money ]
+        affordable = [(cost, shop) for cost, shop in costs if cost <= customer.money]
 
         if not affordable:
-            print(f"{cust.name} doesn't have enough money to make a purchase in any shop")
+            print(f"{customer.name} doesn't have enough money to make a purchase in any shop")
             continue
 
         affordable.sort(key=lambda x: x[0])
         best_cost, best_shop = affordable[0]
 
-        print(f"{cust.name} rides to {best_shop.name}")
-        cust.buy_from(best_shop, FUEL_PRICE)
+        print(f"{customer.name} rides to {best_shop.name}")
+        customer.buy_from(best_shop, fuel_price)

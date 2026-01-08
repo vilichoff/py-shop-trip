@@ -5,6 +5,7 @@ from typing import List, Dict
 from app.car import Car
 from app.shop import Shop
 
+
 @dataclass
 class Customer:
     name: str
@@ -14,11 +15,11 @@ class Customer:
     car: Car
     home_location: List[int] = field(init=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.home_location = self.location.copy()
 
     def distance_to(self, location: List[int]) -> float:
-        return sqrt((self.location[0] - location[0])**2 + (self.location[1] - location[1])**2)
+        return sqrt((self.location[0] - location[0]) ** 2 + (self.location[1] - location[1]) ** 2)
 
     def fuel_cost(self, distance_km: float, fuel_price: float) -> float:
         return (self.car.fuel_consumption * distance_km / 100) * fuel_price
@@ -27,14 +28,14 @@ class Customer:
         dist = self.distance_to(shop.location)
         fuel_total = self.fuel_cost(dist, fuel_price) * 2
         products_cost = shop.cost_of_products(self.product_cart)
-        if products_cost == float('inf'):
-            return float('inf')
+        if products_cost == float("inf"):
+            return float("inf")
         return round(fuel_total + products_cost, 2)
 
     def can_afford(self, shop: Shop, fuel_price: float) -> bool:
         return self.trip_cost(shop, fuel_price) <= self.money
 
-    def buy_from(self, shop: Shop, fuel_price: float):
+    def buy_from(self, shop: Shop, fuel_price: float) -> None:
         dist = self.distance_to(shop.location)
         fuel_there = self.fuel_cost(dist, fuel_price)
         fuel_back = fuel_there
@@ -48,7 +49,7 @@ class Customer:
         print("You have bought: ")
         for product, qty in self.product_cart.items():
             price = shop.products.get(product, 0)
-            print(f"{qty} {product}{'s' if qty > 1 else ''} for {round(price * qty, 2)} dollars")
+            print(f"{qty} {product}s for {round(price * qty, 2)} dollars")
         print(f"Total cost is {products_cost} dollars")
         print("See you again!\n")
 
