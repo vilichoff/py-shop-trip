@@ -1,5 +1,4 @@
 import json
-from typing import NoReturn
 from app.car import Car
 from app.customer import Customer
 from app.shop import Shop
@@ -38,7 +37,10 @@ def shop_trip() -> None:
             for shop in shops
         ]
         for cost, shop in costs:
-            print(f"{customer.name}'s trip to the {shop.name} costs {cost:.2f}")
+            print(
+                f"{customer.name}'s trip to the {shop.name} costs "
+                f"{cost:.2f}"
+            )
 
         affordable = [
             (cost, shop)
@@ -48,8 +50,8 @@ def shop_trip() -> None:
 
         if not affordable:
             print(
-                f"{customer.name} doesn't have enough money "
-                "to make a purchase in any shop"
+                f"{customer.name} doesn't have enough money to make a "
+                "purchase in any shop"
             )
             continue
 
@@ -58,4 +60,3 @@ def shop_trip() -> None:
 
         print(f"{customer.name} rides to {best_shop.name}")
         customer.buy_from(best_shop, fuel_price)
-
