@@ -51,7 +51,7 @@ class Customer:
         self.location = shop.location.copy()
         products_cost = shop.cost_of_products(self.product_cart)
         total_cost = round(fuel_there + products_cost + fuel_back, 2)
-        now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        now = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
         print(f"Date: {now}")
         print(f"Thanks, {self.name}, for your purchase!")
