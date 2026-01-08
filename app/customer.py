@@ -33,13 +33,13 @@ class Customer:
 
     def trip_cost(self, shop: Shop, fuel_price: float) -> float:
         if not shop.has_all_products(self.product_cart):
-            return float('inf')
+            return float("inf")
 
         dist = self.distance_to(shop.location)
         fuel_total = self.fuel_cost(dist, fuel_price) * 2
         products_cost = shop.cost_of_products(self.product_cart)
         if products_cost is None:
-            return float('inf')
+            return float("inf")
         return round(fuel_total + products_cost, 2)
 
     def can_afford(self, shop: Shop, fuel_price: float) -> bool:
