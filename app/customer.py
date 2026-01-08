@@ -19,7 +19,9 @@ class Customer:
         self.home_location = self.location.copy()
 
     def distance_to(self, location: List[int]) -> float:
-        return sqrt((self.location[0] - location[0]) ** 2 + (self.location[1] - location[1]) ** 2)
+        dx = self.location[0] - location[0]
+        dy = self.location[1] - location[1]
+        return sqrt(dx * dx + dy * dy)
 
     def fuel_cost(self, distance_km: float, fuel_price: float) -> float:
         return (self.car.fuel_consumption * distance_km / 100) * fuel_price
