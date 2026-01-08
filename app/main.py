@@ -7,7 +7,7 @@ from app.shop import Shop
 
 
 def shop_trip() -> None:
-    data_path = Path(__file__).resolve().parent.parent / "config.json"
+    data_path = Path.cwd() / "config.json"
 
     with open(data_path, encoding="utf-8") as file:
         data = json.load(file)
