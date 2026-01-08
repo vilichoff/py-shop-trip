@@ -50,7 +50,8 @@ class Customer:
         for product, qty in self.product_cart.items():
             price = shop.products.get(product, 0)
             print(
-                f"{qty} {product}s for {round(price * qty, 2)} dollars"
+                f"{qty} {product}s for "
+                f"{round(price * qty, 2)} dollars"
             )
         print(f"Total cost is {products_cost} dollars")
         print("See you again!\n")
