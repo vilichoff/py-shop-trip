@@ -16,7 +16,7 @@ class Customer:
     money: float
     car: Car
 
-    def get_total_trip_cost(self, shop: "Shop", fuel_price: float) -> float:
+    def get_total_cost(self, shop: "Shop", fuel_price: float) -> float:
         distance = math.hypot(
             shop.location[0] - self.location[0],
             shop.location[1] - self.location[1],

@@ -34,7 +34,7 @@ def shop_trip() -> None:
         trips = []
         for shop in shops:
             cost = round(
-                customer.get_total_trip_cost(shop, fuel_price),
+                customer.get_total_cost(shop, fuel_price),
                 2,
             )
             print(f"{customer.name}'s trip to the {shop.name} costs {cost}")

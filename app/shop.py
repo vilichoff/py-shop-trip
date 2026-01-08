@@ -12,7 +12,7 @@ class Shop:
     products: dict
     location: list[int]
 
-    def print_receipt(self, customer: "Customer") -> float:
+    def print_receipt(self, customer: "Customer") -> None:
         now = datetime.datetime.now()
         print(f"Date: {now.strftime('%d/%m/%Y %H:%M:%S')}")
         print(f"Thanks, {customer.name}, for your purchase!")
